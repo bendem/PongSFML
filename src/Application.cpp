@@ -65,7 +65,7 @@ void Application::setup() {
 
     static sf::Font f; // "static" keeps the font alive (needed since sf::Text doesn't)
     // TODO You know, that's kinda not portable at all
-    if(!f.loadFromFile("/usr/share/fonts/dejavu/DejaVuSansMono-Bold.ttf")) {
+    if(!f.loadFromFile("./resources/bitstream-vera-sans-mono.roman.ttf")) {
         throw std::runtime_error("Could not load font");
     }
 

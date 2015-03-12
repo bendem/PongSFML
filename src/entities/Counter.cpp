@@ -4,7 +4,6 @@ Counter::Counter(const std::wstring& prefix, const sf::Int64& number, const sf::
         : text("0", font, 20), prefix(prefix), number(number) {
     this->text.setPosition(position);
     this->text.setColor(sf::Color(255, 255, 255, 200));
-    this->text.setStyle(sf::Text::Bold);
 }
 
 void Counter::tick(unsigned long frameLived) {
