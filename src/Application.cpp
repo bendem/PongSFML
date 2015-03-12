@@ -35,7 +35,6 @@ void Application::start(unsigned long fps) {
     sf::Clock profilerClock;
 
     while(this->window.isOpen()) {
-        // TODO Profile these 3 calls
         profilerClock.restart();
         this->eventManager.tick(this->frameLived);
         this->tickTime += (profilerClock.restart()).asMicroseconds();
@@ -64,12 +63,10 @@ void Application::setup() {
     std::cerr << "Application setup start" << std::endl;
 
     static sf::Font f; // "static" keeps the font alive (needed since sf::Text doesn't)
-    // TODO You know, that's kinda not portable at all
     if(!f.loadFromFile("./resources/bitstream-vera-sans-mono.roman.ttf")) {
         throw std::runtime_error("Could not load font");
     }
 
-    // TODO Use VerticalPlatform and HorizontalPlatform
     this->registerEntity(new HorizontalPlatform(window.getSize(), Platform::Top, sf::Keyboard::Left, sf::Keyboard::Right));
     this->registerEntity(new VerticalPlatform(window.getSize(), Platform::Left, sf::Keyboard::Z, sf::Keyboard::S));
     this->registerEntity(new HorizontalPlatform(window.getSize(), Platform::Bottom, sf::Keyboard::Numpad4, sf::Keyboard::Numpad6));
