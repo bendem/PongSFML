@@ -25,12 +25,9 @@ public:
     ~Application();
 
     Application& registerEntity(Entity*);
-    void start();
+    void start(unsigned long);
 
 private:
-
-    static const sf::Time TIME_PER_FRAME;
-
     sf::RenderWindow window;
     Renderer renderer;
     EventManager eventManager;

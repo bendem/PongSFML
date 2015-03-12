@@ -7,7 +7,7 @@ HorizontalPlatform::HorizontalPlatform(const sf::Vector2u& bounds, Position posi
 }
 
 void HorizontalPlatform::tick(unsigned long frameLived) {
-    if(frameLived % 2 != 0) { // Check if there is something less costly than modulo
+    if(frameLived & 1) { // Every two frames
         return;
     }
 

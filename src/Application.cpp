@@ -1,7 +1,5 @@
 #include "Application.hpp"
 
-const sf::Time Application::TIME_PER_FRAME = sf::seconds(1.f/50);
-
 Application::Application(std::string title)
         : window(sf::VideoMode(900, 600), title, sf::Style::Default, sf::ContextSettings(0, 0, 16)),
           renderer(window, this->entitiesByLayer),
@@ -25,10 +23,13 @@ Application& Application::registerEntity(Entity* entity) {
     return *this;
 }
 
-void Application::start() {
+void Application::start(unsigned long fps) {
     this->setup();
+    const sf::Time timePerFrame = sf::seconds(1.f/fps);
 
-    std::cout << "Starting application at " << TIME_PER_FRAME.asMicroseconds() << "µs per frame" << std::endl;
+    std::cout << "Starting application at "
+        << fps << "fps / "
+        << timePerFrame.asMicroseconds() << "µs per frame" << std::endl;
 
     sf::Clock fpsClock;
     sf::Clock profilerClock;
@@ -52,7 +53,7 @@ void Application::start() {
 
         ++this->frameLived;
 
-        this->waitTime = (Application::TIME_PER_FRAME - fpsClock.restart()).asMicroseconds();
+        this->waitTime = (timePerFrame - fpsClock.restart()).asMicroseconds();
         if(this->waitTime > 0) {
             std::this_thread::sleep_for(std::chrono::microseconds(this->waitTime));
         }

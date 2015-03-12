@@ -8,7 +8,7 @@ Counter::Counter(const std::wstring& prefix, const sf::Int64& number, const sf::
 }
 
 void Counter::tick(unsigned long frameLived) {
-    if(frameLived % 5 == 0) {
+    if(!(frameLived & 7)) {
         this->text.setString(prefix + std::to_wstring(this->number));
     }
 }
