@@ -15,9 +15,12 @@ public:
     void tick(unsigned long);
     void update();
 
+    bool done() const { return this->shouldClose; }
+
 private:
     sf::RenderWindow& window;
     const std::multiset<Entity*, Entity::ByPriority>& entities;
+    bool shouldClose;
 
 };
 

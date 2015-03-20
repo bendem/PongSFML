@@ -1,5 +1,5 @@
-#ifndef PLATEFORM_HPP
-#define PLATEFORM_HPP
+#ifndef PLATFORM_HPP
+#define PLATFORM_HPP
 
 #include "entities/Entity.hpp"
 
@@ -14,6 +14,7 @@ public:
     };
 
     Platform(const sf::Vector2u&, Position);
+    Platform(const Platform&);
 
     void draw(sf::RenderWindow&) override;
 

@@ -1,7 +1,7 @@
 #include "EventManager.hpp"
 
 EventManager::EventManager(sf::RenderWindow& window, const std::multiset<Entity*, Entity::ByPriority>& entities)
-    : window(window), entities(entities) {
+    : window(window), entities(entities), shouldClose(false) {
 }
 
 void EventManager::tick(unsigned long frameLived) {
@@ -14,8 +14,9 @@ void EventManager::update() {
     static sf::Event event;
 
     while(this->window.pollEvent(event)) {
-        if(event.type == sf::Event::Closed) {
-            this->window.close();
+        if(event.type == sf::Event::Closed
+                || (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Q)) {
+            this->shouldClose = true;
             return;
         }
 

@@ -7,9 +7,12 @@ class HorizontalPlatform : public Platform {
 
 public:
     HorizontalPlatform(const sf::Vector2u&, Position, sf::Keyboard::Key, sf::Keyboard::Key);
+    HorizontalPlatform(const HorizontalPlatform&);
 
     void tick(unsigned long) override;
     void update(const sf::Event&) override;
+
+    Entity* clone() const override { return new HorizontalPlatform(*this); }
 
 private:
     sf::Keyboard::Key left;

@@ -5,20 +5,20 @@
 
 #include <set>
 
+#include "GameState.hpp"
 #include "entities/Entity.hpp"
 
 class Renderer {
 
 public:
-    Renderer(sf::RenderWindow& window, const std::multiset<Entity*, Entity::ByLayer>& entities);
+    Renderer(sf::RenderWindow&);
 
     Renderer& setBackground(const sf::Color&);
 
-    void render();
+    void render(const GameState&);
 
 private:
     sf::RenderWindow& window;
-    const std::multiset<Entity*, Entity::ByLayer>& entities;
     sf::Color bgColor;
 
 };

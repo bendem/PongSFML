@@ -6,6 +6,8 @@ Frames::Frames(sf::Font& f, unsigned int x, unsigned int y)
     this->text.setPosition(x, y);
 }
 
+Frames::Frames(const Frames& p) : text(p.text) {}
+
 void Frames::tick(unsigned long frameLived) {
     this->text.setString(std::to_string(frameLived));
 }

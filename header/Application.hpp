@@ -10,6 +10,8 @@
 #include <thread>
 
 #include "EventManager.hpp"
+#include "GameState.hpp"
+#include "GameUpdater.hpp"
 #include "Renderer.hpp"
 #include "entities/Ball.hpp"
 #include "entities/Counter.hpp"
@@ -22,24 +24,20 @@ class Application {
 
 public:
     Application(std::string);
-    ~Application();
 
     Application& registerEntity(Entity*);
     void start(unsigned long);
 
 private:
     sf::RenderWindow window;
+    GameState state;
     Renderer renderer;
     EventManager eventManager;
+    GameUpdater gameUpdater;
 
-    std::vector<Entity*> entities;
-    // As always, is that container really adapted to this usage (thousands of sorted iterations for each insertion)
-    std::multiset<Entity*, Entity::ByLayer> entitiesByLayer;
-    std::multiset<Entity*, Entity::ByPriority> entitiesByPriority;
-
-    sf::Int64 tickTime;
-    sf::Int64 updateTime;
+    sf::Int64 cloneTime;
     sf::Int64 renderTime;
+    sf::Int64 frameTime;
     sf::Int64 totalTime;
     sf::Int64 waitTime;
 

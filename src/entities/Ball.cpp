@@ -9,6 +9,9 @@ Ball::Ball(const sf::Vector2u& bounds, const sf::Vector2f& position, const sf::V
     this->ball.setOutlineThickness(-2);
 }
 
+Ball::Ball(const Ball& p) : bounds(p.bounds), ball(p.ball), velocity(p.velocity) {
+}
+
 void Ball::tick(unsigned long) {
     sf::Vector2f pos(this->ball.getPosition());
 

@@ -19,11 +19,13 @@ public:
     };
 
     Entity(Layer = Middle, Priority = Normal);
+    Entity(const Entity&);
     virtual ~Entity() {}
 
     virtual void tick(unsigned long);
     virtual void update(const sf::Event&);
     virtual void draw(sf::RenderWindow&);
+    virtual Entity* clone() const = 0;
 
     struct ByLayer {
         bool operator()(Entity*, Entity*);

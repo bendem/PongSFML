@@ -2,24 +2,17 @@
 
 Application::Application(std::string title)
         : window(sf::VideoMode(900, 600), title, sf::Style::Default, sf::ContextSettings(0, 0, 16)),
-          renderer(window, this->entitiesByLayer),
-          eventManager(window, this->entitiesByPriority) {
-    this->tickTime = 0;
-    this->updateTime = 0;
+          state(),
+          renderer(window),
+          eventManager(window, state.getEntitiesByPriority()),
+          gameUpdater(eventManager) {
+    this->cloneTime = 0;
     this->renderTime = 0;
     this->frameLived = 0;
 }
 
-Application::~Application() {
-    for(Entity* entity : this->entities) {
-        delete entity;
-    }
-}
-
 Application& Application::registerEntity(Entity* entity) {
-    this->entities.push_back(entity);
-    this->entitiesByLayer.insert(entity);
-    this->entitiesByPriority.insert(entity);
+    this->state.registerEntity(entity);
     return *this;
 }
 
@@ -27,28 +20,39 @@ void Application::start(unsigned long fps) {
     this->setup();
     const sf::Time timePerFrame = sf::seconds(1.f/fps);
 
-    std::cout << "Starting application at "
+    std::cerr << "Starting application at "
         << fps << "fps / "
-        << timePerFrame.asMicroseconds() << "µs per frame" << std::endl;
+        << timePerFrame.asMilliseconds() << "ms per frame" << std::endl;
 
     sf::Clock fpsClock;
     sf::Clock profilerClock;
 
     while(this->window.isOpen()) {
         profilerClock.restart();
-        this->eventManager.tick(this->frameLived);
-        this->tickTime += (profilerClock.restart()).asMicroseconds();
-        this->tickTime /= 2;
 
-        this->eventManager.update();
-        this->updateTime += (profilerClock.restart()).asMicroseconds();
-        this->updateTime /= 2;
+        GameState snapshot(this->state);
+        this->cloneTime += (profilerClock.restart()).asMicroseconds();
+        this->cloneTime /= 2;
 
-        this->renderer.render();
+        // Update on the game updater thread
+        this->gameUpdater.update(this->frameLived);
+
+        // while rendering on this one
+        this->renderer.render(snapshot);
         this->renderTime += (profilerClock.restart()).asMicroseconds();
         this->renderTime /= 2;
 
-        this->totalTime = this->tickTime + this->updateTime + this->renderTime;
+        // Wait for the updates to finish in case they took more time than rendering
+        this->gameUpdater.wait();
+        this->frameTime += this->renderTime + (profilerClock.restart()).asMicroseconds();
+        this->frameTime /= 2;
+
+        if(this->eventManager.done()) {
+            this->window.close();
+            break;
+        }
+
+        this->totalTime = this->cloneTime + this->frameTime;
 
         ++this->frameLived;
 
@@ -57,6 +61,7 @@ void Application::start(unsigned long fps) {
             std::this_thread::sleep_for(std::chrono::microseconds(this->waitTime));
         }
     }
+    this->gameUpdater.stop();
 }
 
 void Application::setup() {
@@ -77,11 +82,11 @@ void Application::setup() {
     this->registerEntity(new Ball(window.getSize(), sf::Vector2f(345, 55), sf::Vector2f(2, -15)));
     this->registerEntity(new Ball(window.getSize(), sf::Vector2f(845, 405), sf::Vector2f(-2, 3)));
 
-    this->registerEntity(new Counter(L"ticks:  ", this->tickTime, sf::Vector2f(50, 65), f));
-    this->registerEntity(new Counter(L"update: ", this->updateTime, sf::Vector2f(50, 90), f));
-    this->registerEntity(new Counter(L"render: ", this->renderTime, sf::Vector2f(50, 115), f));
-    this->registerEntity(new Counter(L"total:  ", this->totalTime, sf::Vector2f(50, 140), f));
-    this->registerEntity(new Counter(L"wait:   ", this->waitTime, sf::Vector2f(50, 170), f));
+    this->registerEntity(new Counter(L"clone:  ", this->cloneTime, sf::Vector2f(50, 50), f));
+    this->registerEntity(new Counter(L"render: ", this->renderTime, sf::Vector2f(50, 75), f));
+    this->registerEntity(new Counter(L"frame:  ", this->frameTime, sf::Vector2f(50, 100), f));
+    this->registerEntity(new Counter(L"total:  ", this->totalTime, sf::Vector2f(50, 125), f));
+    this->registerEntity(new Counter(L"wait:   ", this->waitTime, sf::Vector2f(50, 160), f));
 
     this->renderer.setBackground(sf::Color(20, 20, 20));
 

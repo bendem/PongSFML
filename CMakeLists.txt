@@ -8,6 +8,8 @@ include_directories(header)
 set(SOURCE_FILES
     header/Application.hpp
     header/EventManager.hpp
+    header/GameState.hpp
+    header/GameUpdater.hpp
     header/Renderer.hpp
     header/entities/Ball.hpp
     header/entities/Counter.hpp
@@ -18,6 +20,8 @@ set(SOURCE_FILES
     header/entities/VerticalPlatform.hpp
     src/Application.cpp
     src/EventManager.cpp
+    src/GameState.cpp
+    src/GameUpdater.cpp
     src/Renderer.cpp
     src/entities/Ball.cpp
     src/entities/Counter.cpp
@@ -27,6 +31,8 @@ set(SOURCE_FILES
     src/entities/Platform.cpp
     src/entities/VerticalPlatform.cpp
     main.cpp)
+
+add_definitions(-DSFML_STATIC)
 
 add_executable(Pong ${SOURCE_FILES})
 target_link_libraries(Pong -lsfml-graphics -lsfml-window -lsfml-system)

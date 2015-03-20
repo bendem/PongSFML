@@ -6,6 +6,10 @@ VerticalPlatform::VerticalPlatform(const sf::Vector2u& bounds, Position position
           isKeyUpDown(false), isKeyDownDown(false) {
 }
 
+VerticalPlatform::VerticalPlatform(const VerticalPlatform& p)
+    : Platform(p), up(p.up), down(p.down), isKeyUpDown(p.isKeyUpDown), isKeyDownDown(p.isKeyDownDown) {
+}
+
 void VerticalPlatform::tick(unsigned long frameLived) {
     if(frameLived & 1) { // Every two frames
         return;

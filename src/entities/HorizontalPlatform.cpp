@@ -6,6 +6,10 @@ HorizontalPlatform::HorizontalPlatform(const sf::Vector2u& bounds, Position posi
           isKeyLeftDown(false), isKeyRightDown(false) {
 }
 
+HorizontalPlatform::HorizontalPlatform(const HorizontalPlatform& p)
+    : Platform(p), left(p.left), right(p.right), isKeyLeftDown(p.isKeyLeftDown), isKeyRightDown(p.isKeyRightDown) {
+}
+
 void HorizontalPlatform::tick(unsigned long frameLived) {
     if(frameLived & 1) { // Every two frames
         return;
@@ -43,4 +47,3 @@ void HorizontalPlatform::update(const sf::Event& event) {
         isKeyRightDown = event.type == sf::Event::KeyPressed;
     }
 }
-

@@ -4,6 +4,9 @@ Entity::Entity(Layer layer, Priority priority)
     : layer(layer), priority(priority) {
 }
 
+Entity::Entity(const Entity& p) : layer(p.layer), priority(p.priority) {
+}
+
 void Entity::tick(unsigned long) {
 }
 

@@ -39,6 +39,9 @@ Platform::Platform(const sf::Vector2u& size, Position position)
     this->platform.setOutlineThickness(-2);
 }
 
+Platform::Platform(const Platform& p) : platform(p.platform), bounds(p.bounds), position(p.position) {
+}
+
 void Platform::draw(sf::RenderWindow& window) {
     window.draw(this->platform);
 }

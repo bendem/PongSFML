@@ -1,7 +1,6 @@
 #include "Renderer.hpp"
 
-Renderer::Renderer(sf::RenderWindow& window, const std::multiset<Entity*, Entity::ByLayer>& entities)
-    : window(window), entities(entities) {
+Renderer::Renderer(sf::RenderWindow& window) : window(window) {
 }
 
 Renderer& Renderer::setBackground(const sf::Color& color) {
@@ -9,9 +8,9 @@ Renderer& Renderer::setBackground(const sf::Color& color) {
     return *this;
 }
 
-void Renderer::render() {
+void Renderer::render(const GameState& state) {
     this->window.clear(this->bgColor);
-    for(Entity* entity : this->entities) {
+    for(Entity* entity : state.getEntitiesByLayer()) {
         entity->draw(this->window);
     }
     this->window.display();
